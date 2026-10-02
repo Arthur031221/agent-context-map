@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>agent-context-map</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html, body { width: 1200px; height: 675px; margin: 0; }
+  body {
+    display: grid;
+    grid-template-columns: 43% 57%;
+    gap: 0;
+    padding: 54px;
+    background: #eef2f1;
+    color: #132321;
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+  }
+  .copy { display: flex; flex-direction: column; justify-content: center; padding: 5px 38px 5px 5px; }
+  .eyebrow { margin: 0 0 26px; color: #147e78; font: 700 15px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .14em; text-transform: uppercase; }
+  h1 { margin: 0; max-width: 440px; font-size: 53px; line-height: 1.02; letter-spacing: -.055em; font-weight: 680; }
+  .pitch { max-width: 400px; margin: 24px 0 0; color: #52635f; font-size: 20px; line-height: 1.45; }
+  .identity { display: flex; align-items: center; gap: 12px; margin-top: 56px; color: #294340; font: 600 15px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .mark { width: 30px; height: 30px; }
+  .terminal { align-self: center; min-height: 500px; border: 1px solid #203431; background: #11201f; color: #d6e4e1; padding: 26px 27px 24px; }
+  .bar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid #334744; color: #9caeaa; font: 12px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .lights { display: flex; gap: 7px; }
+  .lights i { width: 8px; height: 8px; border-radius: 50%; background: #59716b; }
+  .command { padding: 20px 0 18px; color: #e9f2ef; font: 14px/1.45 ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .prompt { color: #57c4b6; }
+  .tree { font: 14px/1.85 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
+  .path { color: #b9cac6; }
+  .muted { color: #80928d; }
+  .status { display: inline-block; min-width: 112px; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+  .yes { color: #70d3bd; }
+  .maybe { color: #efc16d; }
+  .no { color: #9aa9a5; }
+  .unknown { color: #e28a7c; }
+  .detail { padding-left: 26px; color: #8fa19c; font: 11px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .target { color: #fff; }
+  .footer { display: flex; justify-content: space-between; margin-top: 22px; padding-top: 15px; border-top: 1px solid #334744; color: #9caeaa; font: 11px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+</style>
+</head>
+<body>
+  <section class="copy">
+    <p class="eyebrow">Repository context map</p>
+    <h1>See what may reach the task.</h1>
+    <p class="pitch">A path aware view of repository instructions, with a reason for every decision.</p>
+    <div class="identity">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M9 9h9v8H9zM22 23h9v8h-9z" fill="none" stroke="#137f78" stroke-width="2.5"/><path d="M18 13h5v14h-1M23 13h8" fill="none" stroke="#173c38" stroke-width="2.5"/><circle cx="31" cy="13" r="2" fill="#cf9b3d"/></svg>
+      <span>agent-context-map</span>
+    </div>
+  </section>
+  <section class="terminal" aria-label="Sample terminal output">
+    <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span>examples/demo-workspace</span></div>
+    <div class="command"><span class="prompt">$</span> agent-context-map packages/api/src/route.ts<br>&nbsp;&nbsp;--root . --agent codex</div>
+    <div class="tree">
+      <div>  .</div>
+      <div>  |-- <span class="path">AGENTS.md</span> <span class="status yes">PREDICTED</span></div>
+      <div>  |   <span class="detail">selected at launch</span></div>
+      <div>  \-- <span class="path">packages/</span></div>
+      <div>      |-- <span class="path">api/</span></div>
+      <div>      |   \-- <span class="path">AGENTS.md</span> <span class="status maybe">CONDITIONAL</span></div>
+      <div>      |       <span class="detail">if explicitly read or a session starts here</span></div>
+      <div>      |   \-- <span class="path target">src/route.ts  TARGET</span></div>
+      <div>      \-- <span class="path">web/AGENTS.md</span> <span class="status no">SKIPPED</span></div>
+      <div>          <span class="detail">outside the selected path</span></div>
+    </div>
+    <div class="footer"><span>STATIC PREDICTION</span><span>LOCAL FILES ONLY</span></div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "agent-context-map",
+  "version": "0.1.0",
+  "description": "Predict which repository instruction files apply to a target path.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "agent-context-map": "./bin/agent-context-map.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}

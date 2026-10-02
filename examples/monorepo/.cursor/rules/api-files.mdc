@@ -1,0 +1,6 @@
+---
+description: API source files
+globs: "packages/api/**/*.ts"
+alwaysApply: false
+---
+Keep request handling close to its route.
