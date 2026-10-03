@@ -720,23 +720,26 @@ const STATUS_COLORS = {
   unknown: "\u001b[31m",
 };
 
-function addTreePath(tree, relative, decision, isTarget) {
+function addTreePath(tree, relative, decision, isTarget, targetIsDirectory = false) {
   const parts = relative === "." ? [] : relative.split("/");
   let current = tree;
   for (const part of parts) {
     if (!current.children.has(part)) {
-      current.children.set(part, { name: part, children: new Map(), decision: null, target: false });
+      current.children.set(part, { name: part, children: new Map(), decision: null, target: false, directory: false });
     }
     current = current.children.get(part);
   }
   if (decision) current.decision = decision;
-  if (isTarget) current.target = true;
+  if (isTarget) {
+    current.target = true;
+    current.directory = targetIsDirectory;
+  }
 }
 
-function treeForClient(client, targetPath) {
+function treeForClient(client, targetPath, targetIsDirectory) {
   const tree = { name: ".", children: new Map(), decision: null, target: false };
   for (const decision of client.decisions) addTreePath(tree, decision.file, decision, false);
-  addTreePath(tree, targetPath, null, true);
+  addTreePath(tree, targetPath, null, true, targetIsDirectory);
   const lines = ["  ."];
   function visit(node, prefix) {
     const children = [...node.children.values()].sort((left, right) => left.name.localeCompare(right.name));
@@ -744,7 +747,7 @@ function treeForClient(client, targetPath) {
       const last = index === children.length - 1;
       const connector = last ? "\\-- " : "|-- ";
       const continuation = last ? "    " : "|   ";
-      const isDirectory = child.children.size > 0;
+      const isDirectory = child.directory || child.children.size > 0;
       let label = child.name + (isDirectory ? "/" : "");
       if (child.target) label += " [TARGET]";
       if (child.decision) label += " [" + STATUS_LABELS[child.decision.status] + "] " + child.decision.reason;
@@ -767,7 +770,7 @@ export function renderText(result, { color = Boolean(process.stdout.isTTY && !pr
   for (const client of result.clients) {
     lines.push("");
     lines.push(client.name + " (" + client.rulesetId + ")");
-    for (const line of treeForClient(client, result.target.path)) {
+    for (const line of treeForClient(client, result.target.path, result.target.type === "directory")) {
       if (!color) {
         lines.push(line);
       } else {

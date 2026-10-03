@@ -198,3 +198,16 @@ test("text output names the target and labels results without claiming live cont
     closeFixture(root);
   }
 });
+
+test("text output marks an empty directory target as a directory", () => {
+  const root = fixture();
+  const target = path.join(root, "packages/empty");
+  fs.mkdirSync(target, { recursive: true });
+  try {
+    const result = scan({ root, launchDir: root, target: "packages/empty", agent: "codex" });
+    const output = renderText(result, { color: false });
+    assert.match(output, /\\-- empty\/ \[TARGET\]/);
+  } finally {
+    closeFixture(root);
+  }
+});
